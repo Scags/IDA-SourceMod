@@ -40,6 +40,8 @@ Keyboard shortcut configuration (everything is hardcoded at the moment).
 
 Current builds are against IDA 7.5's SDK. If you want a version lower you're going to have to build it yourself. (Good luck with that).
 
+Grab a .dll from the [releases](https://github.com/Scags/IDA-SourceMod/releases) tab and drag it to the `plugins/` folder in your IDA installation. Restart IDA and it should load up immediately on the toolbar.
+
 ### Building Yourself ###
 
 I don't own a Linux version of IDA so I didn't bother trying to set up a build for that. The main thing you need to know is that this uses C++20 features so don't forget to add the switches and update MSVC (16.10+ I think).
