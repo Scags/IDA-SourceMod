@@ -22,9 +22,10 @@ public:
 	GetOffsetToFunc(const char *pName, const char *pLabel, const char *pPath = nullptr, int actionflags = 0)
 		: CallableScript(pName, pLabel, pPath, actionflags) {}
 
-	virtual void OnLoadPost(void)
+	virtual bool OnLoad(void)
 	{
 		SetupAction("Ctrl+Shift+A");	// A for Awffset lol
+		return true;
 	}
 
 	virtual int Activate(action_update_ctx_t *ctx)

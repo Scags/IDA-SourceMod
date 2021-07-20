@@ -33,14 +33,13 @@ static plugmod_t *idaapi init()
 		// Extreme laziness
 		std::string path = pPath == nullptr || pPath == "" ? std::string(sourcemod::kPluginMenuName) + std::string("/") : std::string(pPath);
 
-		p->OnLoadPost();
 		ICallableScript *pCallable = dynamic_cast<ICallableScript *>(p);
 		if (pCallable != nullptr)
 		{
 			// msg("attaching %s %s %d\n", path.c_str(), p->GetLabel(), p->GetActionFlags());
 			attach_action_to_menu(path.c_str(), p->GetLabel(), p->GetActionFlags());
 		}
-
+		p->OnLoadPost();
 	}
 
 	msg("SourceMod Utils loaded\n");
