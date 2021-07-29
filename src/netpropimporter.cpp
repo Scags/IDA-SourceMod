@@ -444,7 +444,7 @@ public:
 	virtual void MakeStruct(void)
 	{
 		struc_t *struc = GetStruct();
-		msg("Adding %s\n", GetName());
+//		msg("Adding %s\n", GetName());
 		for (auto &val : Tables())
 		{
 			val.second->AddToStruct(struc);
