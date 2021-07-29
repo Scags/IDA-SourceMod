@@ -241,12 +241,16 @@
     <ClCompile Include="jumptosig.cpp" />
     <ClCompile Include="makesig.cpp" />
     <ClCompile Include="makesigfromhere.cpp" />
+    <ClCompile Include="netpropimporter.cpp" />
     <ClCompile Include="plugin.cpp" />
+    <ClCompile Include="pugixml\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helpers.h" />
     <ClInclude Include="iscript.h" />
     <ClInclude Include="plugin.h" />
+    <ClInclude Include="pugixml\pugiconfig.hpp" />
+    <ClInclude Include="pugixml\pugixml.hpp" />
     <ClInclude Include="scriptmgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

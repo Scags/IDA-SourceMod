@@ -7,6 +7,8 @@
 #include <bytes.hpp>
 #include <string>
 #include <format>
+#include <sstream>
+#include <vector>
 
 inline std::string print_wildcards(size_t size)
 {
@@ -134,5 +136,30 @@ inline int makesig(ea_t foundaddr, std::string &smsig, std::string *sigout = nul
 
 	return SIGFAIL_NONE;
 }
+
+// From https://stackoverflow.com/a/12967010
+inline std::vector<std::string> StringExplode(std::string const &s, char delim)
+{
+	std::vector<std::string> result;
+	std::istringstream iss(s);
+
+	for (std::string token; std::getline(iss, token, delim);)
+	{
+		result.push_back(std::move(token));
+	}
+
+	return result;
+}
+
+// From https://stackoverflow.com/a/4654718
+// Yes, I am that lazy...
+inline bool IsNumber(const std::string &s)
+{
+	std::string::const_iterator it = s.begin();
+	while (it != s.end() && std::isdigit(*it))
+		++it;
+	return !s.empty() && it == s.end();
+}
+
 
 #endif	// HELPERS_INCLUDED

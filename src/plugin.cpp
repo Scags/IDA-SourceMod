@@ -67,7 +67,7 @@ plugin_t PLUGIN
 	sourcemod::kPluginComment,
 	nullptr,
 	sourcemod::kPluginMenuName,
-	sourcemod::kPluginShortcut
+	nullptr
 };
 
 plugin_t *sourcemod::GetPlugin(void)
