@@ -26,22 +26,22 @@
 
 #include "pugixml/pugixml.hpp"
 
-#define SPROP_UNSIGNED (1 << 0) // Unsigned integer data.
-#define SPROP_COORD (1 << 1) // If this is set, the float/vector is treated like a world coordinate. \
+#define SPROP_UNSIGNED (1 << 0)				  // Unsigned integer data.
+#define SPROP_COORD (1 << 1)				  // If this is set, the float/vector is treated like a world coordinate. \
 							 // Note that the bit count is ignored in this case.
-#define SPROP_NOSCALE (1 << 2) // For floating point, don't scale into range, just take value as is.
-#define SPROP_ROUNDDOWN (1 << 3) // For floating point, limit high value to range minus one bit unit
-#define SPROP_ROUNDUP (1 << 4) // For floating point, limit low value to range minus one bit unit
-#define SPROP_NORMAL (1 << 5) // If this is set, the vector is treated like a normal (only valid for vectors)
-#define SPROP_EXCLUDE (1 << 6) // This is an exclude prop (not excludED, but it points at another prop to be excluded).
-#define SPROP_XYZE (1 << 7) // Use XYZ/Exponent encoding for vectors.
-#define SPROP_INSIDEARRAY (1 << 8) // This tells us that the property is inside an array, so it shouldn't be put into the \
+#define SPROP_NOSCALE (1 << 2)				  // For floating point, don't scale into range, just take value as is.
+#define SPROP_ROUNDDOWN (1 << 3)			  // For floating point, limit high value to range minus one bit unit
+#define SPROP_ROUNDUP (1 << 4)				  // For floating point, limit low value to range minus one bit unit
+#define SPROP_NORMAL (1 << 5)				  // If this is set, the vector is treated like a normal (only valid for vectors)
+#define SPROP_EXCLUDE (1 << 6)				  // This is an exclude prop (not excludED, but it points at another prop to be excluded).
+#define SPROP_XYZE (1 << 7)					  // Use XYZ/Exponent encoding for vectors.
+#define SPROP_INSIDEARRAY (1 << 8)			  // This tells us that the property is inside an array, so it shouldn't be put into the \
 								   // flattened property list. Its array will point at it when it needs to.
-#define SPROP_PROXY_ALWAYS_YES (1 << 9) // Set for datatable props using one of the default datatable proxies like \
+#define SPROP_PROXY_ALWAYS_YES (1 << 9)		  // Set for datatable props using one of the default datatable proxies like \
 										// SendProxy_DataTableToDataTable that always send the data to all clients.
-#define SPROP_CHANGES_OFTEN (1 << 10) // this is an often changed field, moved to head of sendtable so it gets a small index
-#define SPROP_IS_A_VECTOR_ELEM (1 << 11) // Set automatically if SPROP_VECTORELEM is used.
-#define SPROP_COLLAPSIBLE (1 << 12) // Set automatically if it's a datatable with an offset of 0 that doesn't change the pointer \
+#define SPROP_CHANGES_OFTEN (1 << 10)		  // this is an often changed field, moved to head of sendtable so it gets a small index
+#define SPROP_IS_A_VECTOR_ELEM (1 << 11)	  // Set automatically if SPROP_VECTORELEM is used.
+#define SPROP_COLLAPSIBLE (1 << 12)			  // Set automatically if it's a datatable with an offset of 0 that doesn't change the pointer \
 									// (ie: for all automatically-chained base classes).                                         \
 									// In this case, it can get rid of this SendPropDataTable altogether and spare the           \
 									// trouble of walking the hierarchy more than necessary.
@@ -279,7 +279,7 @@ public:
 
 	void Parse(pugi::xml_node node, ea_t curroffset = 0)
 	{
-// TODO; implement this
+		// TODO; implement this
 		// Very bad hack to get a decent size for embedded classes
 //		std::string subprop(node.attribute("name"));
 //		if (propname.rfind("DT_", 0) == 0)
@@ -349,7 +349,7 @@ public:
 
 		for (auto &val : Props())
 		{
-			auto prop = val.second;
+			auto &prop = val.second;
 			if (prop->GetOffset() == 0)
 				continue;
 
@@ -371,12 +371,10 @@ public:
 	{
 		return m_Name;
 	}
-
 	inline IServerClass *GetServerClass(void)
 	{
 		return m_Class;
 	}
-
 	inline SendProp *GetProp(std::string &name)
 	{
 		return m_Props[name].get();
@@ -390,12 +388,10 @@ public:
 	{
 		return m_Props;
 	}
-
 	inline SendProp *OwnerProp(void)
 	{
 		return m_Owner;
 	}
-
 	inline bool IsSubTable(void)
 	{
 		return OwnerProp() && OwnerProp()->GetType() == DPT_DataTable;
@@ -487,17 +483,14 @@ public:
 	{
 		return m_StrucID;
 	}
-
 	inline struc_t *GetStruct(void)
 	{
 		return get_struc(GetStrucID());
 	}
-
 	inline std::map<std::string, std::shared_ptr<SendProp>> &Props(void)
 	{
 		return m_Props;
 	}
-
 	inline std::map<std::string, std::shared_ptr<SendTable>> &Tables(void)
 	{
 		return m_Tables;
@@ -565,13 +558,11 @@ public:
 	{
 		return m_ServerClasses[name];
 	}
-
 	inline void AddClass(std::string &name, std::shared_ptr<ServerClass> cls)
 	{
 		if (!m_ServerClasses.contains(name))
 			m_ServerClasses[name] = cls;
 	}
-
 	inline std::map<std::string, std::shared_ptr<ServerClass>> &Classes(void)
 	{
 		return m_ServerClasses;
@@ -609,10 +600,12 @@ public:
 			return 0;
 		}
 
+//		msg("Initializing import...\n");
 		ImportManager mgr;
 		mgr.MakeBasicStructs();
 		mgr.Parse(xml.get());
 		mgr.CreateStructs();
+		msg("Done!\n");
 
 		return 0;
 	}

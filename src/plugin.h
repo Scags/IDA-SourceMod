@@ -19,7 +19,7 @@ namespace sourcemod
 	constexpr const char kPluginMenuName[] = "SourceMod";
 
 	const char kPluginName[] = "SourceMod Utils";
-	const char kPluginVer[] = "1.0.1.2";
+	const char kPluginVer[] = "1.1.0.4";
 	const char kPluginAuthor[] = "Scag";
 	const char kPluginID[] = "com.github.IDA-SourceMod";
 	const char kPluginFreeForm[] = "(c) 2021, John Mascagni";

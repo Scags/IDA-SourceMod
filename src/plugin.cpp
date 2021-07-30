@@ -3,11 +3,22 @@
 #include <idp.hpp>
 #include <kernwin.hpp>
 #include <loader.hpp>
-#include <string>
+#include <diskio.hpp>
+
+#include "pugixml/pugixml.hpp"
 #include "plugin.h"
 #include "iscript.h"
 
-std::vector<IScript *> g_Scripts;
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <memory>
+
+namespace sourcemod
+{
+	std::vector<IScript *> scripts;
+	std::unordered_map<std::string, std::string> shortcuts;
+};
 
 static plugmod_t *idaapi init()
 {
@@ -20,8 +31,21 @@ static plugmod_t *idaapi init()
 	addon_info.freeform = sourcemod::kPluginFreeForm;
 	register_addon(&addon_info);
 
+	std::string dir(idadir(CFG_SUBDIR) + std::string("\\sourcemod.xml"));
+	auto xml = std::make_unique<pugi::xml_document>();
+	pugi::xml_parse_result result = xml->load_file(dir.c_str());
+	if (result.status != pugi::status_ok)
+	{
+		msg("SOURCEMOD: Could not parse config file '%s'\nError %d\n", dir.c_str(), result.status);
+	}
+
+	for (pugi::xml_node node : xml->child("shortcuts").children())
+	{
+		sourcemod::shortcuts[node.child_value("name")] = node.child_value("shortcut");
+	}
+
 	create_menu(sourcemod::kPluginName, sourcemod::kPluginMenuName);
-	for (IScript *p : g_Scripts)
+	for (IScript *p : sourcemod::scripts)
 	{
 		if (p == nullptr)
 			continue;
@@ -31,12 +55,12 @@ static plugmod_t *idaapi init()
 
 		const char *pPath = p->GetPath();
 		// Extreme laziness
-		std::string path = pPath == nullptr || pPath == "" ? std::string(sourcemod::kPluginMenuName) + std::string("/") : std::string(pPath);
+		std::string path(pPath == nullptr || pPath == "" ? std::string(sourcemod::kPluginMenuName) + "/" : pPath);
 
 		ICallableScript *pCallable = dynamic_cast<ICallableScript *>(p);
 		if (pCallable != nullptr)
 		{
-			// msg("attaching %s %s %d\n", path.c_str(), p->GetLabel(), p->GetActionFlags());
+//			msg("attaching %s%s %s %d\n", path.c_str(), p->GetLabel(), p->GetName(), p->GetActionFlags());
 			attach_action_to_menu(path.c_str(), p->GetLabel(), p->GetActionFlags());
 		}
 		p->OnLoadPost();
@@ -48,13 +72,13 @@ static plugmod_t *idaapi init()
 
 sourcemod::plugin_ctx_t::~plugin_ctx_t()
 {
-	for (IScript *p : g_Scripts)
+	for (IScript *p : scripts)
 	{
 		if (p)
 			p->OnUnload();
 	}
 	delete_menu(sourcemod::kPluginName);
-	g_Scripts.clear();
+	scripts.clear();
 }
 
 plugin_t PLUGIN

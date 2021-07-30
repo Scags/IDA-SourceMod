@@ -60,4 +60,4 @@ public:
 	}
 };
 
-static MakeSigFromHere script("MakeSig from here");
+static MakeSigFromHere script("Make signature from here");

@@ -6,6 +6,7 @@
 #include <ida.hpp>
 #include <bytes.hpp>
 #include <string>
+#include <concepts>
 #include <format>
 #include <sstream>
 #include <vector>

@@ -11,4 +11,4 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 *.user
-.vscode/settings.json
+.vscode/*
