@@ -10,7 +10,14 @@
 #include "iscript.h"
 #include "plugin.h"
 
-extern std::vector<IScript *> g_Scripts;
+#include <vector>
+#include <unordered_map>
+
+namespace sourcemod
+{
+	extern std::vector<IScript *> scripts;
+	extern std::unordered_map<std::string, std::string> shortcuts;
+};
 
 class Script : public IScript
 {
@@ -22,13 +29,15 @@ public:
 	Script(const char *pName, const char *pLabel, const char *pPath = nullptr, int actionflags = 0)
 		: m_Name(pName), m_MenuName(pLabel), m_MenuPath(pPath), m_ActionFlags(actionflags)
 	{
-		g_Scripts.push_back(this);
+		sourcemod::scripts.push_back(this);
 	}
 
-	virtual bool OnLoad(void) { return true; }
+	virtual bool OnLoad(void)
+	{
+		return true;
+	}
 	virtual void OnLoadPost(void) {}
 	virtual void OnUnload(void) {}
-
 	virtual const char *GetName(void) const
 	{
 		return m_Name;
@@ -50,7 +59,7 @@ private:
 	const char *m_Name;
 	const char *m_MenuName;
 	const char *m_MenuPath;
-	int m_ActionFlags;	// See SETMENU_ flags in kernwin.hpp
+	int m_ActionFlags; // See SETMENU_ flags in kernwin.hpp
 };
 
 class CallableScript : public Script, public ICallableScript
@@ -60,12 +69,30 @@ public:
 		: Script(pName, pName), m_Handler(this) {}
 	CallableScript(const char *pName, const char *pLabel, const char *pPath = nullptr, int actionflags = 0)
 		: Script(pName, pLabel, pPath, actionflags), m_Handler(this) {}
-	virtual action_desc_t *GetAction(void) { return &m_Action; }
-	virtual int Activate(action_activation_ctx_t *ctx) { return 0; }
-	virtual action_state_t Update(action_update_ctx_t *ctx) { return AST_ENABLE_ALWAYS; }
+
+	virtual action_desc_t *GetAction(void)
+	{
+		return &m_Action;
+	}
+	virtual int Activate(action_activation_ctx_t *ctx)
+	{
+		return 0;
+	}
+	virtual action_state_t Update(action_update_ctx_t *ctx)
+	{
+		return AST_ENABLE_ALWAYS;
+	}
+	virtual bool OnLoad(void)
+	{
+		SetupAction();
+		return true;
+	}
 
 	struct action_handler;
-	inline action_handler *GetHandler(void) { return &m_Handler; }
+	inline action_handler *GetHandler(void)
+	{
+		return &m_Handler;
+	}
 
 	void SetupAction(const char *pShortcut = nullptr, const char *pTooltip = nullptr, int icon = 0, int flags = 0)
 	{
@@ -74,7 +101,7 @@ public:
 		m_Action.label = GetLabel();
 		m_Action.handler = GetHandler();
 		m_Action.owner = sourcemod::GetPlugin();
-		m_Action.shortcut = pShortcut;
+		m_Action.shortcut = sourcemod::shortcuts.contains(std::string(GetName())) ? sourcemod::shortcuts[std::string(GetName())].c_str() : pShortcut;
 		m_Action.tooltip = pTooltip;
 		m_Action.icon = icon;
 		// ADF_ flags in kernwin.hpp
@@ -85,24 +112,27 @@ public:
 	struct action_handler : public action_handler_t
 	{
 		action_handler(CallableScript *pOuter)
-		: m_Out(pOuter) {}
+			: m_Out(pOuter) {}
 
 		virtual int idaapi activate(action_activation_ctx_t *ctx)
 		{
 			return GetOuter()->Activate(ctx);
 		}
-
 		virtual action_state_t idaapi update(action_update_ctx_t *ctx)
 		{
 			return GetOuter()->Update(ctx);
 		}
 
-		inline CallableScript *GetOuter(void) { return m_Out; }
+		inline CallableScript *GetOuter(void)
+		{
+			return m_Out;
+		}
 		CallableScript *m_Out;
 	};
+
 private:
 	action_desc_t m_Action;
 	action_handler m_Handler;
 };
 
-#endif	// SCRIPT_MGR_INCLUDED
+#endif // SCRIPT_MGR_INCLUDED

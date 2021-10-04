@@ -17,16 +17,12 @@ namespace sourcemod
 	constexpr const int kPluginFlags = PLUGIN_FIX | PLUGIN_MULTI;
 	constexpr const char kPluginComment[] = "View SourceMod scripts and utilities";
 	constexpr const char kPluginMenuName[] = "SourceMod";
-	constexpr const char kPluginShortcut[] = "";
 
 	const char kPluginName[] = "SourceMod Utils";
-	const char kPluginVer[] = "1.0.0";
+	const char kPluginVer[] = "1.1.0.4";
 	const char kPluginAuthor[] = "Scag";
 	const char kPluginID[] = "com.github.IDA-SourceMod";
 	const char kPluginFreeForm[] = "(c) 2021, John Mascagni";
-
-	// Toolbar
-	const char kToolbarID[] = "sourcemod";
 
 	struct plugin_ctx_t : public plugmod_t
 	{

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<shortcuts>
+ <script>
+  <name>Get offset from function</name>
+  <shortcut>Ctrl+Shift+A</shortcut>
+ </script>
+ <script>
+  <name>Make signature</name>
+  <shortcut>Ctrl+Shift+S</shortcut>
+ </script>
+ <script>
+  <name>Validate signature</name>
+  <shortcut>Ctrl+Shift+Z</shortcut>
+ </script>
+ <script>
+  <name>Jump to signature</name>
+  <shortcut>Ctrl+Shift+J</shortcut>
+ </script>
+ <script>
+  <name>Make signature from here</name>
+  <shortcut>Ctrl+Shift+D</shortcut>
+ </script>
+ <script>
+  <name>Import netprop dump</name>
+  <shortcut>Ctrl+Shift+N</shortcut>
+ </script>
+ <script>
+  <name>Align imported structures</name>
+  <shortcut>Ctrl+Shift+V</shortcut>
+ </script>
+</shortcuts>
